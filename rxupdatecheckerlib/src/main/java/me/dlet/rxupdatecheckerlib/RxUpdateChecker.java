@@ -10,6 +10,8 @@ import org.jsoup.nodes.Document;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -48,8 +50,8 @@ public class RxUpdateChecker {
         return this;
     }
 
-    public void checkForAnUpdate(OnResultListener onResultListener){
-        this.builder.check(onResultListener);
+    public Observable<Boolean> check(){
+        return this.builder.check();
     }
 
     private void initiateBuilder(){
@@ -61,99 +63,92 @@ public class RxUpdateChecker {
         boolean enableLogging=false;
         boolean isDebug = false;
         String appPackageName;
-        OnResultListener onResultListener;
 
-        private void check(OnResultListener listener){
-            onResultListener=listener;
+        private Observable<Boolean> check(){
             if ((appPackageName == null || appPackageName.isEmpty()) && !isDebug)
                 appPackageName = context.getPackageName();
 
-            startHttpCall();
+            return startChecking();
         }
-    }
 
-    private void startHttpCall(){
-        get().subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<AppDetails>() {
-                    @Override
-                    public void onCompleted() {
+        private Observable<Boolean> startChecking(){
+            return Observable.just(appPackageName)
+                    .compose(request())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread());
+        }
 
-                    }
+        private Observable.Transformer<String, Boolean> request(){
+            return new Observable.Transformer<String, Boolean>() {
+                @Override
+                public Observable<Boolean> call(final Observable<String> appDetailsObservable) {
+                    return appDetailsObservable
+                            .flatMap(new Func1<String, Observable<Boolean>>() {
+                                @Override
+                                public Observable<Boolean> call(final String package_name) {
+                                    return appDetailsObservable(package_name)
+                                            .doOnNext(new Action1<AppDetails>() {
+                                                @Override
+                                                public void call(AppDetails appDetails) {
+                                                    Utils.saveAppDetails(context, appDetails);
+                                                    Logger.d(appDetails.toString(), builder.enableLogging);
+                                                }
+                                            })
+                                            .map(new Func1<AppDetails, Boolean>() {
+                                                @Override
+                                                public Boolean call(AppDetails appDetails) {
+                                                    return checkIfHasNewUpdate(appDetails, package_name);
+                                                }
+                                            });
+                                }
+                            });
+                }
+            };
+        }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Logger.e(e.getMessage(), builder.enableLogging);
-                    }
-
-                    @Override
-                    public void onNext(AppDetails details) {
-                        Logger.d(details.toString(), builder.enableLogging);
-                        checkIfHasNewUpdate(details);
-                    }
-                });
-    }
-
-    private Observable<AppDetails> get(){
-        return Observable.create(new Observable.OnSubscribe<AppDetails>() {
-            @Override
-            public void call(Subscriber<? super AppDetails> subscriber) {
-                if (builder.sourceFrom == Sources.PLAYSTORE){
+        private Observable<AppDetails> appDetailsObservable(final String packageName){
+            return Observable.create(new Observable.OnSubscribe<AppDetails>() {
+                @Override
+                public void call(Subscriber<? super AppDetails> subscriber) {
                     try {
-                        Document doc = Jsoup.connect(Constants.URL_PLAYSTORE.concat(builder.appPackageName))
+                        Document doc = Jsoup.connect(Constants.URL_PLAYSTORE.concat(packageName))
                                 .header(Constants.HEADER_ACCEPT_LANGUAGE, Constants.VALUE_ACCEPT_LANGUAGE)
                                 .referrer(Constants.REFERRER)
                                 .get();
 
-                        subscriber.onNext(disectInformationFromPS(doc));
+                        AppDetails appDetails = new AppDetails();
+
+                        appDetails.setSoftwareVersion(doc.select(Constants.DIV_ITEMPROP_SOFTWAREVERSION).first().ownText());
+                        appDetails.setOperatingSystems(doc.select(Constants.DIV_ITEMPROP_OPERATINGSYSTEM).first().ownText());
+                        appDetails.setDatePublished(doc.select(Constants.DIV_ITEMPROP_DATEPUBLISHED).first().ownText());
+                        appDetails.setNumDownloads(doc.select(Constants.DIV_ITEMPROP_NUMDOWNLOADS).first().ownText());
+
+                        subscriber.onNext(appDetails);
                         subscriber.onCompleted();
                     }catch (Exception e){
                         e.printStackTrace();
-                        Logger.d(e.getMessage(), builder.enableLogging);
                         subscriber.onError(e);
                     }
-                } else {
-                    subscriber.onError(new UnknownError("Source not supported."));
                 }
-            }
-        });
-    }
-
-    private AppDetails disectInformationFromPS(Document doc){
-        AppDetails appDetails = new AppDetails();
-
-        appDetails.setSoftwareVersion(doc.select(Constants.DIV_ITEMPROP_SOFTWAREVERSION).first().ownText());
-        appDetails.setOperatingSystems(doc.select(Constants.DIV_ITEMPROP_OPERATINGSYSTEM).first().ownText());
-        appDetails.setDatePublished(doc.select(Constants.DIV_ITEMPROP_DATEPUBLISHED).first().ownText());
-        appDetails.setNumDownloads(doc.select(Constants.DIV_ITEMPROP_NUMDOWNLOADS).first().ownText());
-
-        return appDetails;
-    }
-
-    private void checkIfHasNewUpdate(AppDetails appDetails){
-        if (Utils.containsNumber(appDetails.getSoftwareVersion())){
-            try {
-                PackageInfo info = context.getPackageManager().getPackageInfo(builder.appPackageName,
-                        PackageManager.COMPONENT_ENABLED_STATE_DEFAULT);
-
-                if (!info.versionName.equalsIgnoreCase(appDetails.getSoftwareVersion())){
-                    Logger.d("New updates available", builder.enableLogging);
-                    builder.onResultListener.onNewUpdateAvailable(appDetails);
-                    Utils.saveAppDetails(context, appDetails);
-                } else {
-                    Logger.d("No updates available", builder.enableLogging);
-                    Utils.saveAppDetails(context, appDetails);
-                }
-            } catch (PackageManager.NameNotFoundException e){
-                Logger.e(e.getMessage(), builder.enableLogging);
-            }
-        } else {
-            Logger.d("Doesn't contain any number", builder.enableLogging);
+            });
         }
-    }
 
-    public interface OnResultListener{
-        void onNewUpdateAvailable(AppDetails appDetails);
+        private boolean checkIfHasNewUpdate(AppDetails appDetails, String package_name){
+            if (Utils.containsNumber(appDetails.getSoftwareVersion())){
+                try {
+                    PackageInfo info = context.getPackageManager().getPackageInfo(package_name,
+                            PackageManager.COMPONENT_ENABLED_STATE_DEFAULT);
+
+                    if (!info.versionName.equalsIgnoreCase(appDetails.getSoftwareVersion())){
+                        return true;
+                    }
+                } catch (PackageManager.NameNotFoundException e){
+                    e.printStackTrace();
+                }
+            }
+
+            return false;
+        }
     }
 
 }
