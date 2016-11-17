@@ -13,7 +13,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final String mPackage = "com.fotoku.mobile";
+        final String mPackage = "com.dlet.circleswithcolor.android";
         new RxUpdateChecker(this)
                 .enableLog()
                 .forDebugging()

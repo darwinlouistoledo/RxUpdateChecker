@@ -133,7 +133,7 @@ public class RxUpdateChecker {
         });
     }
 
-    private boolean checkIfHasNewUpdate(AppDetails appDetails, String package_name){
+    private Boolean checkIfHasNewUpdate(AppDetails appDetails, String package_name){
         if (Utils.containsNumber(appDetails.getSoftwareVersion())){
             try {
                 PackageInfo info = context.getPackageManager().getPackageInfo(package_name,

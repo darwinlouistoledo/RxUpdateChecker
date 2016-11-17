@@ -19,6 +19,8 @@ repositories {
 
 dependencies {
     ..
+    compile 'io.reactivex:rxjava:1.2.2'
+    compile 'io.reactivex:rxandroid:1.2.1'
     compile 'me.darwinlouistoledo:rxupdatechecker:0.1.0'
     ..
 }
