@@ -83,7 +83,7 @@ ext {
     siteUrl = 'https://github.com/darwinlouistoledo/RxUpdateChecker'
     gitUrl = 'https://github.com/darwinlouistoledo/RxUpdateChecker.git'
 
-    libraryVersion = '0.3.0'
+    libraryVersion = '0.1.0'
 
     developerId = 'darwinlouistoledo'
     developerName = 'Darwin Louis Toledo'
@@ -94,5 +94,5 @@ ext {
     allLicenses = ["MIT License"]
 }
 
-//apply from: 'https://raw.githubusercontent.com/darwinlouistoledo/JCenter/master/install.gradle'
-//apply from: 'https://raw.githubusercontent.com/darwinlouistoledo/JCenter/master/bintray.gradle'
+apply from: 'https://raw.githubusercontent.com/darwinlouistoledo/JCenter/master/install.gradle'
+apply from: 'https://raw.githubusercontent.com/darwinlouistoledo/JCenter/master/bintray.gradle'

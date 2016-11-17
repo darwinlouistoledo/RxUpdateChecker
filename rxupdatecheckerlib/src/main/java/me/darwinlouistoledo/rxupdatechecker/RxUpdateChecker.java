@@ -34,7 +34,7 @@ public class RxUpdateChecker {
      * Use this if you want to see the log of the library if there's
      * an error and the result.
      *
-     * @return
+     * @return RxUpdateChecker
      */
     public RxUpdateChecker enableLog(){
         this.enableLogging = true;
@@ -48,7 +48,7 @@ public class RxUpdateChecker {
      *
      * See {@link #packageName(String)}
      *
-     * @return
+     * @return RxUpdateChecker
      */
     public RxUpdateChecker forDebugging(){
         this.isDebug = true;
@@ -59,8 +59,8 @@ public class RxUpdateChecker {
      * The package name to test/debug. You should call {@link #forDebugging()}
      * method in order for the given package name to take effect.
      *
-     * @param packageName
-     * @return
+     * @param packageName The package name of the app to check
+     * @return RxUpdateChecker
      */
     public RxUpdateChecker packageName(String packageName){
         this.appPackageName = packageName;
@@ -73,7 +73,7 @@ public class RxUpdateChecker {
      *
      * If aBoolean = true, then there's an update, else none.
      *
-     * @return
+     * @return Observable
      */
     public Observable<Boolean> check(){
         return startChecking();
