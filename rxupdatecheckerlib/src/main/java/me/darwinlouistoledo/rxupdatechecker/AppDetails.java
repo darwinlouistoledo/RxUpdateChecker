@@ -1,4 +1,4 @@
-package me.dlet.rxupdatecheckerlib;
+package me.darwinlouistoledo.rxupdatechecker;
 
 /**
  * Created by darwinlouistoledo on 6/28/16.

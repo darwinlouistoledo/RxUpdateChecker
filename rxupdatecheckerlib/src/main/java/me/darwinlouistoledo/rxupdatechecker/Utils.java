@@ -1,4 +1,4 @@
-package me.dlet.rxupdatecheckerlib;
+package me.darwinlouistoledo.rxupdatechecker;
 
 import android.content.Context;
 import android.content.SharedPreferences;
