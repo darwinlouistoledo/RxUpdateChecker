@@ -3,7 +3,7 @@ package me.dlet.rxupdatecheckerlib;
 /**
  * Created by darwinlouistoledo on 6/28/16.
  */
-public class AppDetails{
+class AppDetails{
     private String datePublished;
     private String fileSize;
     private String numDownloads;
