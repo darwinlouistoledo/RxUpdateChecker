@@ -18,6 +18,12 @@
 
 -optimizations !code/allocation/variable
 
+-dontwarn java.lang.invoke**
+
+-dontwarn rx.**
+
 -keep public class * {
     public protected *;
 }
+
+-keep class com.creativehothouse.lib.** { *; }
