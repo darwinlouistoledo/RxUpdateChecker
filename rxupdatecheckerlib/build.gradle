@@ -1,11 +1,12 @@
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'maven-publish'
 
 publishing {
 
     def packageName = 'me.darwinlouistoledo'
     def artifactName = 'rxupdatechecker'
-    def libraryVersion = '1.0'
+    def libraryVersion = '0.1.0'
     def outputAAR = ("$buildDir/outputs/aar/${project.getName()}-release.aar")
 
     publications {
@@ -32,7 +33,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0"
+        versionName "0.1.0"
     }
 
     compileOptions {
@@ -70,8 +71,8 @@ ext {
 
     libraryDescription = 'A library that will check for an update of an app from Google PlayStore.'
 
-    siteUrl = 'https://github.com/darwinlouistoledo/Fonto'
-    gitUrl = 'https://github.com/darwinlouistoledo/Fonto.git'
+    siteUrl = 'https://github.com/darwinlouistoledo/RxUpdateChecker'
+    gitUrl = 'https://github.com/darwinlouistoledo/RxUpdateChecker.git'
 
     libraryVersion = '0.3.0'
 
