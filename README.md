@@ -1,7 +1,7 @@
 RxUpdateChecker
 ===================
 
-A library that will check for an update of an app. Currently, this is only application for checking an update from Google PlayStore.
+A library that will check for an update of an App from Google Play Store with the use of RxAndroid and RxJava.
 
 ----------
 
@@ -21,7 +21,7 @@ dependencies {
     ..
     compile 'io.reactivex:rxjava:1.2.2'
     compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'me.darwinlouistoledo:rxupdatechecker:0.1.0'
+    compile 'me.darwinlouistoledo:rxupdatechecker:1.0.0'
     ..
 }
 
@@ -34,48 +34,44 @@ You can use this by adding the code in your `Application` class or in your `Laun
 
 **Using Lambda Expression**
 ```java
-@Override
-public void onCreate() {
-        super.onCreate();
+@Override protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
 
-        new RxUpdateChecker(this)
-                .check()
-                .subscribe(hasUpdate -> {
-                    if (hasUpdate) {
-                        //Do anything you want when has an update in this block
-                    } else {
-                        //Do anything you want when has no update in this block
-                    }
-                }, throwable -> {
-                    //Do anything you want when there's an error in this block
-                });
+    RxUpdateChecker.getInstance(this)
+        .check()
+        .subscribe(hasUpdate -> {
+          if (hasUpdate) {
+            //Version Found. Do something here...
+          } else {
+            //Version Not Found. Do something here...
+          }
+        }, throwable -> {
+            //Exception occurs. Do something here...
+        });
 }
 ```
 
 **Using Normal Expression**
 ```java
-@Override
-public void onCreate() {
-        super.onCreate();
+@Override protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
 
-        new RxUpdateChecker(this)
-                .check()
-                .subscribe(new Action1<Boolean>() {
-                    @Override
-                    public void call(Boolean hasUpdate) {
-                        if (hasUpdate) {
-                            //Do anything you want when has an update in this block
-                        } else {
-                            //Do anything you want when has no update in this block
-                        }
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        //Do anything you want when there's an error in this block
-                    }
-                });
-}
+    RxUpdateChecker.getInstance(this)
+        .check()
+        .subscribe(new Action1<Boolean>() {
+          @Override public void call(Boolean hasUpdate) {
+            if (hasUpdate) {
+              //Version Found. Do something here...
+            } else {
+              //Version Not Found. Do something here...
+            }
+          }
+        }, new Action1<Throwable>() {
+          @Override public void call(Throwable throwable) {
+            //Exception occurs. Do something here...
+          }
+        });
+  }
 ```
 
 Remarks
