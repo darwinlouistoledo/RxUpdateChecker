@@ -16,6 +16,12 @@
 #   public *;
 #}
 
+# This is a configuration file for ProGuard.
+# http://proguard.sourceforge.net/index.html#manual/usage.html
+-dontusemixedcaseclassnames
+-dontskipnonpubliclibraryclasses
+-verbose
+
 -optimizations !code/allocation/variable
 
 -dontwarn java.lang.invoke**
@@ -23,7 +29,5 @@
 -dontwarn rx.**
 
 -keep public class * {
-    public protected *;
+    public *;
 }
-
--keep class com.creativehothouse.lib.** { *; }

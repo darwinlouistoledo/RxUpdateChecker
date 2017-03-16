@@ -1,97 +1,83 @@
 apply plugin: 'com.android.library'
-apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'maven-publish'
 
 publishing {
 
-    def packageName = 'me.darwinlouistoledo'
-    def artifactName = 'rxupdatechecker'
-    def libraryVersion = '0.1.0'
-    def outputAAR = ("$buildDir/outputs/aar/${project.getName()}-release.aar")
+  def packageName = 'me.darwinlouistoledo'
+  def artifactName = 'rxupdatechecker'
+  def libraryVersion = '1.0.0'
+  def outputAAR = ("$buildDir/outputs/aar/${project.getName()}-release.aar")
 
-    publications {
-        maven(MavenPublication) {
-            groupId packageName
-            artifactId artifactName
-            version = libraryVersion
-            artifact outputAAR
-        }
-        aar(MavenPublication) {
-            groupId packageName
-            artifactId artifactName
-            version = libraryVersion
-            artifact outputAAR
-        }
+  publications {
+    maven(MavenPublication) {
+      groupId packageName
+      artifactId artifactName
+      version = libraryVersion
+      artifact outputAAR
     }
+    aar(MavenPublication) {
+      groupId packageName
+      artifactId artifactName
+      version = libraryVersion
+      artifact outputAAR
+    }
+  }
 }
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+  compileSdkVersion 23
+  buildToolsVersion "23.0.3"
 
-    defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 23
-        versionCode 1
-        versionName "0.1.0"
-    }
+  defaultConfig {
+    minSdkVersion 16
+    targetSdkVersion 23
+    versionCode 1
+    versionName "1.0.0"
+  }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+  buildTypes {
+    release {
+      minifyEnabled false
+      shrinkResources false
+      debuggable true
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-
-    packagingOptions {
-        exclude 'META-INF/maven/org/jsoup/jsoup/pom.properties'
-        exclude 'META-INF/maven/org/jsoup/jsoup/pom.xml'
-        exclude 'META-INF/MANIFEST.MF'
-    }
+  }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.4.0'
-    compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.2.2'
-
-    //compile 'org.jsoup:jsoup:1.8.3'
+  compile 'io.reactivex:rxandroid:1.2.1'
+  compile 'io.reactivex:rxjava:1.2.2'
 }
 
 task copyLibs(type: Copy) {
-    from configurations.compile
-    into 'libs'
+  from configurations.compile
+  into 'libs'
 }
 
 ext {
-    bintrayRepo = 'maven'
-    bintrayName = 'RxUpdateChecker'
+  bintrayRepo = 'maven'
+  bintrayName = 'RxUpdateChecker'
 
-    publishedGroupId = 'me.darwinlouistoledo'
-    libraryName = 'RxUpdateChecker'
-    artifact = 'rxupdatechecker'
+  publishedGroupId = 'me.darwinlouistoledo'
+  libraryName = 'RxUpdateChecker'
+  artifact = 'rxupdatechecker'
 
-    libraryDescription = 'A library that will check for an update of an app from Google PlayStore.'
+  libraryDescription =
+      'A library that will check for an update of an app from Google PlayStore with the use of RxAndroid and RxJava.'
 
-    siteUrl = 'https://github.com/darwinlouistoledo/RxUpdateChecker'
-    gitUrl = 'https://github.com/darwinlouistoledo/RxUpdateChecker.git'
+  siteUrl = 'https://github.com/darwinlouistoledo/RxUpdateChecker'
+  gitUrl = 'https://github.com/darwinlouistoledo/RxUpdateChecker.git'
 
-    libraryVersion = '0.1.0'
+  libraryVersion = '1.0.0'
 
-    developerId = 'darwinlouistoledo'
-    developerName = 'Darwin Louis Toledo'
-    developerEmail = 'darwinlouistoledo@gmail.com'
+  developerId = 'darwinlouistoledo'
+  developerName = 'Darwin Louis Toledo'
+  developerEmail = 'darwinlouistoledo@gmail.com'
 
-    licenseName = 'MIT License'
-    licenseUrl = 'https://opensource.org/licenses/MIT'
-    allLicenses = ["MIT License"]
+  licenseName = 'MIT License'
+  licenseUrl = 'https://opensource.org/licenses/MIT'
+  allLicenses = ["MIT License"]
 }
 
 apply from: 'https://raw.githubusercontent.com/darwinlouistoledo/JCenter/master/install.gradle'
