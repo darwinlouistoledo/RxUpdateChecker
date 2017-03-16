@@ -13,12 +13,12 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    final String mPackage = "com.supercell.clashroyale";
+    final String mPackage = "com.adobe.reader";
 
     RxUpdateChecker.getInstance(this)
-        .enableLog()
-        .forDebugging()
-        .packageName(mPackage)
+        .enableLog() //To enable the log of the RxUpdateChecker
+        .forDebugging() //If you want to use other package just for testing
+        .packageName(mPackage)//The package of the app that you want to check that is already in playstore
         .check()
         .subscribe(new Action1<Boolean>() {
           @Override public void call(Boolean aBoolean) {
