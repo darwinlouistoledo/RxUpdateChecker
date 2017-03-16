@@ -27,6 +27,7 @@
 -dontwarn java.lang.invoke**
 
 -dontwarn rx.**
+-keep class rx.**{*;}
 
 -keep public class * {
     public *;

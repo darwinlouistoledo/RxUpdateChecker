@@ -37,12 +37,19 @@ android {
 
   buildTypes {
     release {
-      minifyEnabled false
+      minifyEnabled true
       shrinkResources false
       debuggable true
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
+
+  android {
+    lintOptions {
+      abortOnError false
+    }
+  }
+
 }
 
 dependencies {

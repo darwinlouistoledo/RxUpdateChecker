@@ -8,15 +8,18 @@ A library that will check for an update of an App from Google Play Store with th
 
 Gradle configuration
 -------------------------------
-First, you need to add this gradle configuration in your `build.gradle` file.
+First, you need to add this gradle configuration in your Project's `build.gradle` file.
 
 ```gradle
+...
 repositories {
     jcenter()
 }
-
-..
-
+...
+```
+Second, you need to add this gradle configuration in your App's `build.gradle` file.
+```gradle
+...
 dependencies {
     ..
     compile 'io.reactivex:rxjava:1.2.2'
@@ -24,7 +27,7 @@ dependencies {
     compile 'me.darwinlouistoledo:rxupdatechecker:1.0.0'
     ..
 }
-
+...
 ```
 
 Usage
