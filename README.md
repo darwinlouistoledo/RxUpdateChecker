@@ -8,7 +8,9 @@ A library that will check for an update of an App from Google Play Store with th
 
 Gradle configuration
 -------------------------------
-First, you need to add this gradle configuration in your Project's `build.gradle` file.
+Your **minSdkVersion** must be >= 16.
+
+You need to add this gradle configuration in your Project's `build.gradle` file.
 
 ```gradle
 ...
@@ -17,7 +19,7 @@ repositories {
 }
 ...
 ```
-Second, you need to add this gradle configuration in your App's `build.gradle` file.
+Then, add this gradle configuration in your App's `build.gradle` file.
 ```gradle
 ...
 dependencies {
@@ -33,7 +35,7 @@ dependencies {
 
 Usage
 ---------
-To use this library your **minSdkVersion** must be >= 16.
+
 
 You can use this by adding the code in your `Application` class or in your `Launcher Activity` class. See code snippet below.
 
