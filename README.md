@@ -33,6 +33,8 @@ dependencies {
 
 Usage
 ---------
+To use this library your **minSdkVersion** must be >= 16.
+
 You can use this by adding the code in your `Application` class or in your `Launcher Activity` class. See code snippet below.
 
 
