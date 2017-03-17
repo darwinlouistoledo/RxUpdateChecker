@@ -46,29 +46,32 @@ class Utils {
     }
   }
 
-  public static void saveAppVersion(Context context, String package_name, String found_version){
-    if (weakReference == null || weakReference.get()==null){
-      SharedPreferences sharedPreferences = context.getSharedPreferences(
-          package_name+Constants.PREFS_RX_UPDATE_CHECKER, Context.MODE_PRIVATE);
-      weakReference = new WeakReference<>(sharedPreferences);
-
-    }
-
-    weakReference.get().edit().putString(package_name+Constants.KEY_RUC_VERSION, found_version).commit();
-  }
-
-  public static String getAppVersion(Context context, String package_name){
-    if (weakReference == null || weakReference.get()==null){
-      SharedPreferences sharedPreferences = context.getSharedPreferences(
-          package_name+Constants.PREFS_RX_UPDATE_CHECKER, Context.MODE_PRIVATE);
+  public static void saveAppVersion(Context context, String package_name, String found_version) {
+    if (weakReference == null || weakReference.get() == null) {
+      SharedPreferences sharedPreferences =
+          context.getSharedPreferences(package_name + Constants.PREFS_RX_UPDATE_CHECKER,
+              Context.MODE_PRIVATE);
       weakReference = new WeakReference<>(sharedPreferences);
     }
 
-    return weakReference.get().getString(package_name+Constants.KEY_RUC_VERSION, "");
+    weakReference.get()
+        .edit()
+        .putString(package_name + Constants.KEY_RUC_VERSION, found_version)
+        .commit();
   }
 
-  public static void clear(){
-    weakReference=null;
+  public static String getAppVersion(Context context, String package_name) {
+    if (weakReference == null || weakReference.get() == null) {
+      SharedPreferences sharedPreferences =
+          context.getSharedPreferences(package_name + Constants.PREFS_RX_UPDATE_CHECKER,
+              Context.MODE_PRIVATE);
+      weakReference = new WeakReference<>(sharedPreferences);
+    }
+
+    return weakReference.get().getString(package_name + Constants.KEY_RUC_VERSION, "");
   }
 
+  public static void clear() {
+    weakReference = null;
+  }
 }

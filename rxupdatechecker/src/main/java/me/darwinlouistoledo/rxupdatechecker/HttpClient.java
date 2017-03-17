@@ -24,5 +24,4 @@ class HttpClient {
 
     return is;
   }
-
 }

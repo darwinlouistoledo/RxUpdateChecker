@@ -101,13 +101,17 @@ public class RxUpdateChecker {
         return stringSingle.map(new Func1<String, Boolean>() {
           @Override public Boolean call(String packageName) {
             String version = Utils.getAppVersion(mContext, packageName);
+
+            if (!version.isEmpty()) {
+              Logger.d("Found Version:" + version, isLogEnabled);
+            }
+
             return version.isEmpty() ? false
                 : RxUpdateChecker.this.checkIfHasNewUpdate(version, packageName);
           }
         }).flatMap(new Func1<Boolean, Single<Boolean>>() {
           @Override public Single<Boolean> call(Boolean already_found) {
             if (already_found) {
-              Logger.d("Already found new version before.", isLogEnabled);
               return Single.just(true);
             } else {
               Logger.d("Checking new version from Google Play Store.",
@@ -117,7 +121,7 @@ public class RxUpdateChecker {
                   .map(new Func1<String, Boolean>() {
                     @Override public Boolean call(String found_version) {
                       if (found_version != null) {
-                        Logger.d("Version from Google Play:" + found_version,
+                        Logger.d("Found Version from Google Play:" + found_version,
                             RxUpdateChecker.this.isLogEnabled);
                       }
 
@@ -181,8 +185,10 @@ public class RxUpdateChecker {
         }
       } catch (PackageManager.NameNotFoundException e) {
         e.printStackTrace();
+        throw new RuntimeException("PackageManager.NameNotFoundException: msg = " + e.getMessage());
       }
     } else {
+      Logger.d("The version of the app varies with device.", RxUpdateChecker.this.isLogEnabled);
       throw new RuntimeException("The version of the app varies with device.");
     }
 
@@ -208,6 +214,8 @@ public class RxUpdateChecker {
       }
     }
 
+    Logger.d("No version found or the package has not been found in Google Play Store.",
+        RxUpdateChecker.this.isLogEnabled);
     throw new RuntimeException(
         "No version found or the package has not been found in Google Play Store.");
   }

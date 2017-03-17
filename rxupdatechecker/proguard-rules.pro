@@ -22,12 +22,9 @@
 -dontskipnonpubliclibraryclasses
 -verbose
 
--optimizations !code/allocation/variable
-
--dontwarn java.lang.invoke**
-
--dontwarn rx.**
--keep class rx.**{*;}
+-optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*
+-optimizationpasses 5
+-allowaccessmodification
 
 -keep public class * {
     public *;
