@@ -24,7 +24,8 @@ dependencies {
     ..
     compile 'io.reactivex:rxjava:1.2.7'
     compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'me.darwinlouistoledo:rxupdatechecker:1.0.0'
+
+    compile 'me.darwinlouistoledo:rxupdatechecker:1.0.1'
     ..
 }
 ...
